@@ -4,8 +4,8 @@
       Chat bots 2.0
     </h1>
     <div :class="$style.chatContainer">
-      <Chat self="User 1" />
-      <Contacts />
+      <Chat :name="selected.name" :avatar="selected.avatar" />
+      <Contacts @selected="onSelected" />
     </div>
   </div>
 </template>
@@ -13,9 +13,24 @@
 <script>
 import Contacts from '@/components/business/contacts/Contacts.vue';
 import Chat from '@/components/business/chat/Chat.vue';
+import ChatService from '@/services/ChatService';
 export default {
   name: 'App',
-  components: { Chat, Contacts }
+  components: { Chat, Contacts },
+  provide: {
+    chatService: new ChatService('http://localhost:3000')
+  },
+  methods: {
+    onSelected(selected) {
+      console.log(selected);
+      this.selected = selected;
+    }
+  },
+  data() {
+    return {
+      selected: { name: '', avatar: '' }
+    };
+  }
 };
 </script>
 <style>
