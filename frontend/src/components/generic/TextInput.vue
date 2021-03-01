@@ -2,6 +2,7 @@
   <input
     :class="$style.input"
     type="text"
+    v-model="model"
     v-on:input="onChange"
     v-on:keyup.enter="$emit('enter')"
     :placeholder="placeholder"
@@ -15,6 +16,16 @@ export default {
     modelValue: String
   },
   emits: ['update:modelValue'],
+  data() {
+    return {
+      model: ''
+    };
+  },
+  watch: {
+    modelValue(newValue) {
+      this.model = newValue;
+    }
+  },
   methods: {
     onChange(event) {
       this.$emit('update:modelValue', event.target.value);

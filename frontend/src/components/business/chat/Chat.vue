@@ -30,7 +30,7 @@
     <div :class="$style.input">
       <TextInput
         placeholder="Start chatting!"
-        @onEnter="onSubmit"
+        @enter="onSubmit"
         v-model="input"
       />
       <Button text="Send message" @click="onSubmit" />
@@ -76,10 +76,15 @@ export default {
   },
   methods: {
     onSubmit() {
+      if (this.input === '' || !(this.input + '').replace(/\s/g, '').length) {
+        return;
+      }
       console.log({ input: this.input });
       this.chatService.sendMessage({ text: this.input, recipient: this.name });
+      this.input = '';
     },
     onNewMessage(m) {
+      console.log({ m });
       this.messages.push(m);
     }
   }

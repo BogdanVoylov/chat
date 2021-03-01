@@ -92,10 +92,7 @@ export class MessageGateway {
         return { users: this.users, user };
     }
 
-
-
     private findDialog(u1: string, u2: string): Dialog {
-        this.logger.log(JSON.stringify(this.dialogs))
         return this.dialogs.find(d => d.isSuitable(u1, u2))
     }
 
