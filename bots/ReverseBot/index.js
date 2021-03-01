@@ -19,14 +19,5 @@ socket.on('connect', () => {
 socket.on('connect_error', i => {
     console.log(i);
 });
-socket.on(name, m => {
-    console.log(m)
-    if(m.author === name) {
-     return;   
-    }
-    setTimeout(() => {
 
-        socket.emit('message', {author:name, recipient:m.author, timestamp:Date.now(), text:reverseString(m.text)})
-    },3000)
-})
   
