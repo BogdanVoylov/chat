@@ -19,5 +19,12 @@ socket.on('connect', () => {
 socket.on('connect_error', i => {
     console.log(i);
 });
-
+socket.on(name, m => {
+    console.log(m)
+    if(m.author === name) {
+     return;   
+    }
+    socket.emit('message', {author:name,timestamp:Date.now(), recipient:m.author, text:reverseString(m.text)})
+})
+  
   

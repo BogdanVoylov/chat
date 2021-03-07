@@ -57,6 +57,13 @@ export default {
   },
   inject: ['chatService'],
 
+  async mounted() {
+    await this.chatService.named(); 
+    await this.chatService.subscribeOnMessages(
+        this.onNewMessage
+      ); 
+  },
+
   data() {
     return {
       input: '',
@@ -66,10 +73,12 @@ export default {
   watch: {
     async name() {
       console.log('updated');
-      this.messages = await this.chatService.subscribeOnMessages(
+     /*  this.messages = await this.chatService.subscribeOnMessages(
         this.onNewMessage,
         this.name
-      );
+      ); */
+       this.messages = await this.chatService.getDialog(this.name);
+      
       console.log('recieved');
       console.log(this.messages);
     }
@@ -85,7 +94,10 @@ export default {
     },
     onNewMessage(m) {
       console.log({ m });
+      if(m.author === this.chatService.getMe().name || m.author === this.name){
       this.messages.push(m);
+
+      }
     }
   }
 };

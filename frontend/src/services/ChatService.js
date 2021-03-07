@@ -2,6 +2,10 @@ import io from 'socket.io-client';
 export default class ChatService {
   socket;
   me;
+  gotName;
+  gotNamePromise = new Promise((res)=>{
+    this.gotName = res;
+  });
   constructor(url) {
     this.socket = io(url, {
       reconnection: true
@@ -15,6 +19,10 @@ export default class ChatService {
     this.socket.on('connect_error', i => {
       console.log(i);
     });
+  }
+
+  named(){
+    return this.gotNamePromise;
   }
 
   getMe() {
@@ -41,16 +49,18 @@ export default class ChatService {
     this.socket.emit('message', message);
   }
 
-  async subscribeOnMessages(sub, recipient) {
-    this.socket.on(this.me.name, message => {
-      if (
-        message.recipient === this.me.name ||
-        message.author === this.me.name
-      ) {
-        sub(message);
-      }
-    });
-    return await this.getDialog(recipient);
+
+  subscribeOnMessages(sub) {
+      this.socket.on(this.me.name, message => {
+        if (
+          message.recipient === this.me.name || 
+          message.author === this.me.name 
+        ) {
+          console.log("got message "+this.me.name)
+          sub(message);
+        }
+      });
+    
   }
 
   getUsers() {
@@ -61,6 +71,7 @@ export default class ChatService {
 
         this.users = users.filter(u => u.name != user.name);
         this.me = user;
+        this.gotName();
         console.log({ user });
         res(this.users);
       });
